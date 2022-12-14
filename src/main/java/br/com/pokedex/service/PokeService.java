@@ -88,32 +88,30 @@ public class PokeService {
 
     private void ajustsInSetXp(List<Pokemon> pokemons) {
         setNotEvolutions(pokemons);
-        setTwoEvolutions(pokemons);
+        log.info("Add number evolutions for the pokemon");
+        //setTwoEvolutions(pokemons);
+        log.info("Add number evolutions for the pokemon");
 
-        for (int i = 0; i < pokemons.size(); i++) {
-            if (pokemons.get(i).getEvolution().equals(SECOND_EVOL)) {
-                pokemons.get(i).setHP(30.0);
-                pokemons.get(i).setDefense(10);
-                pokemons.get(i).setAgility(13);
-                pokemons.get(i).setLevel(10.0);
-                pokemons.get(i).setXp(100.0);
-                log.info("Add sets parans for pokemon - {}", pokemons.get(i));
-            } else if (pokemons.get(i).getEvolution().equals(ZERO_EVOL)) {
-                pokemons.get(i).setHP(90.0);
-                pokemons.get(i).setDefense(60);
-                pokemons.get(i).setAgility(60);
-                pokemons.get(i).setLevel(40.0);
-                pokemons.get(i).setXp(200.0);
-                log.info("Add sets parans for pokemon - {}", pokemons.get(i));
-            } else {
-                pokemons.get(i).setHP(60.0);
-                pokemons.get(i).setDefense(40);
-                pokemons.get(i).setAgility(40);
-                pokemons.get(i).setLevel(20.0);
-                pokemons.get(i).setXp(150.0);
-                pokemons.get(i).setEvolution(FIRTS_EVOL);
-                log.info("Add sets parans for pokemon - {}", pokemons.get(i));
+        for (Pokemon poke: pokemons) {
+            if(poke.getEvolution().equals(2)){
+                poke.setHP(30.0);
+                poke.setDefense(10);
+                poke.setAgility(13);
+                poke.setLevel(10.0);
+                poke.setXp(100.0);
             }
+            log.info("Add sets parans for pokemon");
+        }
+
+        for (Pokemon poke: pokemons) {
+            if(poke.getEvolution().equals(1)){
+                poke.setHP(90.0);
+                poke.setDefense(60);
+                poke.setAgility(60);
+                poke.setLevel(40.0);
+                poke.setXp(200.0);
+            }
+            log.info("Add sets parans for pokemon");
         }
     }
 
@@ -129,8 +127,7 @@ public class PokeService {
                 "Snorlax", "Articuno", "Zapdos", "Moltres", "Gyarados", "Slowpoke", "Hitmonlee", "Hitmonchan","Lickitung",
                 "Chansey", "Tangela", "Kangaskhan","Mr. Mime", "Scyther", "Jynx", "Electabuzz", "Magmar", "Pinsir", "Tauros",
                 "Lapras", "Ditto", "Eevee", "Flareon", "Alakazam", "Slowbro", "Magneton", "Farfetchd", "Gengar", "Onix", "Rhydon",
-                "Seadra"
-        );
+                "Seadra");
 
         for (String name : namesPoke) {
             pokemons.stream()
@@ -138,25 +135,6 @@ public class PokeService {
                     .forEach(pokemon -> {
                         pokemon.setEvolution(ZERO_EVOL);
                         log.info("Add Not Evolution for pokemon - {}", pokemon);
-                    });
-        }
-    }
-
-
-    private void setTwoEvolutions(List<Pokemon> pokemons) {
-        List<String> pokes2Evolutions = Arrays.asList("Bulbasaur", "Charmander", "Squirtle",
-                "Caterpie", "Weedle", "Pidgey", "Rattata", "Spearow", "Horsea",
-                "Nidoran", "Clefairy", "Vulpix", "Jigglypuff",
-                "Zubat", "Oddish", "Poliwag", "Abra", "Bellsprout", "Geodude", "Gastly",
-                "Dratini");
-
-
-        for (String name : pokes2Evolutions) {
-            pokemons.stream()
-                    .filter(pokemon -> name.equals(pokemon.getName().trim()))
-                    .forEach(pokemon -> {
-                        pokemon.setEvolution(SECOND_EVOL);
-                        log.info("Have two Evolution for pokemon - {}", pokemon);
                     });
         }
     }

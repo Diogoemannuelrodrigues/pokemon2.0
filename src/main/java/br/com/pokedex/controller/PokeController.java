@@ -29,7 +29,7 @@ public class PokeController {
         return ResponseEntity.status(HttpStatus.OK).body(pokemons);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/{id}")
     public ResponseEntity<Pokemon> getAttack(@PathVariable("id") Integer id, String nameAttack) {
         var poke = pokeService.findPokemon(id);
         pokeService.addAttack(poke, nameAttack);
