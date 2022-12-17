@@ -1,6 +1,5 @@
 package br.com.pokedex.service;
 
-import br.com.pokedex.entity.Attack;
 import br.com.pokedex.entity.Pokemon;
 import br.com.pokedex.exceptions.PokemonNotFoundException;
 import br.com.pokedex.repository.PokeRepository;
@@ -8,9 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.util.Objects.nonNull;
 
@@ -18,6 +17,7 @@ import static java.util.Objects.nonNull;
 @Service
 public class PokeService {
 
+    public static final String LINK = "https://assets.pokemon.com/assets/cms2/img/pokedex/detail/";
     private static final int ZERO_EVOL = 0;
     private static final int FIRTS_EVOL = 1;
     private static final int SECOND_EVOL = 2;
@@ -64,20 +64,19 @@ public class PokeService {
 
 
     private List<Pokemon> addLinkUrlForPokemons(List<Pokemon> pokemons) {
-        String link = "https://assets.pokemon.com/assets/cms2/img/pokedex/detail/";
         var list = pokemons;
         int cont = 1;
         for (int i = 0; i < list.size(); i++, cont++) {
-            var novo = link + "00" + cont + ".png";
+            var novo = LINK + "00" + cont + ".png";
             pokemons.get(i).setLinkurl(novo);
             log.info("########################## - Add link for pokemon {}- ##########################", pokemons.get(i));
             if (i >= 9) {
-                var novoD = link + "0" + cont + ".png";
+                var novoD = LINK + "0" + cont + ".png";
                 pokemons.get(i).setLinkurl(novoD);
                 log.info("########################## - Add link for pokemon {}- ##########################", pokemons.get(i));
             }
             if (i > 99) {
-                var novoN = link + cont + ".png";
+                var novoN = LINK + cont + ".png";
                 pokemons.get(i).setLinkurl(novoN);
                 log.info("########################## - Add link for pokemon {}- ##########################", pokemons.get(i));
             }
@@ -89,11 +88,11 @@ public class PokeService {
     private void ajustsInSetXp(List<Pokemon> pokemons) {
         setNotEvolutions(pokemons);
         log.info("Add number evolutions for the pokemon");
-        //setTwoEvolutions(pokemons);
+        setTwoEvolutions(pokemons);
         log.info("Add number evolutions for the pokemon");
 
-        for (Pokemon poke: pokemons) {
-            if(poke.getEvolution().equals(2)){
+        for (Pokemon poke : pokemons) {
+            if (poke.getEvolution().equals(2)) {
                 poke.setHP(30.0);
                 poke.setDefense(10);
                 poke.setAgility(13);
@@ -103,8 +102,8 @@ public class PokeService {
             log.info("Add sets parans for pokemon");
         }
 
-        for (Pokemon poke: pokemons) {
-            if(poke.getEvolution().equals(1)){
+        for (Pokemon poke : pokemons) {
+            if (poke.getEvolution().equals(1)) {
                 poke.setHP(90.0);
                 poke.setDefense(60);
                 poke.setAgility(60);
@@ -115,17 +114,40 @@ public class PokeService {
         }
     }
 
+        private void setTwoEvolutions(List<Pokemon> pokemons) {
+
+            List<String> namesPoke2 = Arrays.asList("Bulbasaur","Charmander",
+                    "Squirtle", "Caterpie", "Weedle",
+                    "Pidgey", "Nidoran",
+                    "Nidorino", "Oddish",
+                    "Poliwag", "Abra",
+                    "Machop", "Bellsprout",
+                    "Geodude", "Gastley");
+
+            for (String name : namesPoke2) {
+                pokemons.stream()
+                        .filter(pokemon -> name.equals(pokemon.getName()))
+                        .forEach(pokemon -> {
+                            pokemon.setEvolution(SECOND_EVOL);
+                            log.info("Add Not Evolution for pokemon - {}", pokemon);
+                        });
+            }
+
+
+        }
+
+
 
     private void setNotEvolutions(List<Pokemon> pokemons) {
         List<String> namesPoke = Arrays.asList("Butterfree", "Raticate", "Fearow", "Arbok", "Raichu", "Sandslash",
-                "Nidoqueen", "Nidoking", "Golbat","Clefable", "Ninetales", "Wigglytuff", "Vileplume", "Parasect", "Venomoth",
-                "Dugtrio", "Persian", "Golduck", "Primeape", "Arcanine", "Poliwrath", "Machamp", "Victreebel","Porygon",
+                "Nidoqueen", "Nidoking", "Golbat", "Clefable", "Ninetales", "Wigglytuff", "Vileplume", "Parasect", "Venomoth",
+                "Dugtrio", "Persian", "Golduck", "Primeape", "Arcanine", "Poliwrath", "Machamp", "Victreebel", "Porygon",
                 "Tentacruel", "Golem", "Rapidash", "Dodrio", "Dewgong", "Muk", "Cloyster", "Hypno", "Omanyte", "Kabuto",
                 "Kingler", "Electrode", "Exeggutor", "Marowak", "Hitmonlee", "Hitmonchan", "Weezing", "Seaking", "Gloom",
                 "Starmie", "Jynx", "Tauros", "Mew", "Lapras", "Ditto", "Vaporeon", "Jolteon", "Vaporeon", "Jolteon",
                 "Flareon", "Omastar", "Kabutops", "Snorlax", "Mewtwo", "Articuno", "Zapdos", "Moltres", "Dragonite",
-                "Snorlax", "Articuno", "Zapdos", "Moltres", "Gyarados", "Slowpoke", "Hitmonlee", "Hitmonchan","Lickitung",
-                "Chansey", "Tangela", "Kangaskhan","Mr. Mime", "Scyther", "Jynx", "Electabuzz", "Magmar", "Pinsir", "Tauros",
+                "Snorlax", "Articuno", "Zapdos", "Moltres", "Gyarados", "Slowpoke", "Hitmonlee", "Hitmonchan", "Lickitung",
+                "Chansey", "Tangela", "Kangaskhan", "Mr. Mime", "Scyther", "Jynx", "Electabuzz", "Magmar", "Pinsir", "Tauros",
                 "Lapras", "Ditto", "Eevee", "Flareon", "Alakazam", "Slowbro", "Magneton", "Farfetchd", "Gengar", "Onix", "Rhydon",
                 "Seadra");
 
