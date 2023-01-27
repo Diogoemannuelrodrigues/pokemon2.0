@@ -64,20 +64,22 @@ public class PokeService {
 
 
     private List<Pokemon> addLinkUrlForPokemons(List<Pokemon> pokemons) {
+
+        //Ajustar tirar o list e colocar um set
         var list = pokemons;
         int cont = 1;
         for (int i = 0; i < list.size(); i++, cont++) {
-            var novo = LINK + "00" + cont + ".png";
-            pokemons.get(i).setLinkurl(novo);
+            var primeiros10 = LINK + "00" + cont + ".png";
+            pokemons.get(i).setLinkurl(primeiros10);
             log.info("########################## - Add link for pokemon {}- ##########################", pokemons.get(i));
             if (i >= 9) {
-                var novoD = LINK + "0" + cont + ".png";
-                pokemons.get(i).setLinkurl(novoD);
+                var menosQue99 = LINK + "0" + cont + ".png";
+                pokemons.get(i).setLinkurl(menosQue99);
                 log.info("########################## - Add link for pokemon {}- ##########################", pokemons.get(i));
             }
             if (i > 99) {
-                var novoN = LINK + cont + ".png";
-                pokemons.get(i).setLinkurl(novoN);
+                var maioresQue100 = LINK + cont + ".png";
+                pokemons.get(i).setLinkurl(maioresQue100);
                 log.info("########################## - Add link for pokemon {}- ##########################", pokemons.get(i));
             }
         }
@@ -87,9 +89,7 @@ public class PokeService {
 
     private void ajustsInSetXp(List<Pokemon> pokemons) {
         setNotEvolutions(pokemons);
-        log.info("Add number evolutions for the pokemon");
         setTwoEvolutions(pokemons);
-        log.info("Add number evolutions for the pokemon");
 
         for (Pokemon poke : pokemons) {
             if (poke.getEvolution().equals(2)) {
@@ -99,7 +99,6 @@ public class PokeService {
                 poke.setLevel(10.0);
                 poke.setXp(100.0);
             }
-            log.info("Add sets parans for pokemon");
         }
 
         for (Pokemon poke : pokemons) {
@@ -110,7 +109,6 @@ public class PokeService {
                 poke.setLevel(40.0);
                 poke.setXp(200.0);
             }
-            log.info("Add sets parans for pokemon");
         }
     }
 
@@ -129,14 +127,11 @@ public class PokeService {
                         .filter(pokemon -> name.equals(pokemon.getName()))
                         .forEach(pokemon -> {
                             pokemon.setEvolution(SECOND_EVOL);
-                            log.info("Add Not Evolution for pokemon - {}", pokemon);
                         });
             }
 
 
         }
-
-
 
     private void setNotEvolutions(List<Pokemon> pokemons) {
         List<String> namesPoke = Arrays.asList("Butterfree", "Raticate", "Fearow", "Arbok", "Raichu", "Sandslash",
@@ -154,10 +149,9 @@ public class PokeService {
         for (String name : namesPoke) {
             pokemons.stream()
                     .filter(pokemon -> name.equals(pokemon.getName()))
-                    .forEach(pokemon -> {
-                        pokemon.setEvolution(ZERO_EVOL);
-                        log.info("Add Not Evolution for pokemon - {}", pokemon);
-                    });
+                    .forEach(pokemon ->
+                        pokemon.setEvolution(ZERO_EVOL)
+                    );
         }
     }
 
