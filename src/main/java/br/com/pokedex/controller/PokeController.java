@@ -2,6 +2,7 @@ package br.com.pokedex.controller;
 
 import br.com.pokedex.dto.PokemonDto;
 import br.com.pokedex.entity.Attack;
+import br.com.pokedex.entity.Dto.PokemonDTO;
 import br.com.pokedex.entity.Pokemon;
 import br.com.pokedex.service.PokeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,9 +24,9 @@ public class PokeController {
     private PokeService pokeService;
 
     @GetMapping
-    public ResponseEntity<List<Pokemon>> pokemonList() {
+    public ResponseEntity<List<PokemonDTO>> pokemonList() {
         pokeService.startGame();
-        List<Pokemon> pokemons = pokeService.listPokemons();
+        List<PokemonDTO> pokemons = pokeService.listPokemons();
         return ResponseEntity.status(HttpStatus.OK).body(pokemons);
     }
 
