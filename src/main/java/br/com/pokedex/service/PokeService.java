@@ -85,6 +85,7 @@ public class PokeService extends MapperService {
             }
         }
         return list;
+
     }
 
     private List<Pokemon> addLinkUrlForPokemons2(List<Pokemon> pokemons) {
