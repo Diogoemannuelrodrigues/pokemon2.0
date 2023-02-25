@@ -21,11 +21,7 @@ public class AttackService {
 
     public Attack getId(Integer id) {
         var attack = attackRepository.findById(id);
-
-        if (nonNull(attack)) {
-            return attack.get();
-        }
-        return null;
+        return attack.orElse(null);
     }
 
     public Attack saveAttack(Attack attack) {
