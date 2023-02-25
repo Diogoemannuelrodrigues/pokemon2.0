@@ -103,7 +103,7 @@ public class PokeService extends MapperService {
 
     public Pokemon pokemonById(Integer id) {
         var poke = pokeRepository.findById(id);
-        if (nonNull(poke)) {
+        if (poke.isPresent()) {
             return poke.get();
         }
         throw new PokemonNotFoundException("Pokemon not found");
