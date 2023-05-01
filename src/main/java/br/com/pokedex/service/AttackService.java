@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Objects.nonNull;
 
@@ -25,20 +26,19 @@ public class AttackService {
     }
 
     public Attack saveAttack(Attack attack) {
-
-        if (nonNull(attack)) {
-            return attackRepository.save(attack);
+        if(attack.getNameAttack().isBlank() || attack.getNameAttack().isEmpty()){
+            return null;
         }
-        return null;
+        return attackRepository.save(attack);
     }
 
 
     public Attack findAttackByName(String nameAttack) {
-        if (!nameAttack.isBlank() || !nameAttack.isEmpty()) {
-            var attack = attackRepository.findByNameAttack(nameAttack);
-            return attack;
+        if (nameAttack.isBlank() || nameAttack.isEmpty()) {
+            return null;
         }
-        return null;
+        var attack = attackRepository.findByNameAttack(nameAttack);
+        return attack;
     }
 
 }

@@ -6,13 +6,15 @@ import br.com.pokedex.exceptions.PokemonNotFoundException;
 import br.com.pokedex.repository.PokeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparing;
-import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 @Slf4j
@@ -38,14 +40,19 @@ public class PokeService extends MapperService {
         return null;
     }
 
-    public List<PokemonDTO> listPokemons() {
-        return pokeRepository.findAllPokemonsById().stream().map(pokemon -> getConverter().map(pokemon, PokemonDTO.class)).collect(Collectors.toList());
+    public Page<PokemonDTO> listPokemons(Pageable page) {
+        var pokemons = pokeRepository.findAll(page)
+                .stream().map(pokemon -> getConverter()
+                        .map(pokemon, PokemonDTO.class))
+                .collect(Collectors.toList());
+        Page<PokemonDTO> pokemonPage = new PageImpl<>(pokemons, page, pokemons.size());
+        return pokemonPage;
     }
 
     public String startGame() {
         var findAllPokemons = pokeRepository.findAll();
         log.info("########################## - Find all pokemons - ##########################");
-        var pokesUrls = addLinkUrlForPokemons2(findAllPokemons);
+        var pokesUrls = addLinkUrlForPokemons(findAllPokemons);
         pokeRepository.saveAll(pokesUrls);
         return "The game is about to start";
     }
@@ -60,7 +67,7 @@ public class PokeService extends MapperService {
         setAttack.add(attack);
         poke.setAttacks(setAttack);
         savePokemon(poke);
-        return null;
+        return poke;
     }
 
 
@@ -90,12 +97,18 @@ public class PokeService extends MapperService {
 
     private List<Pokemon> addLinkUrlForPokemons2(List<Pokemon> pokemons) {
         Collections.sort(pokemons, comparing(Pokemon::getId).thenComparing(Pokemon::getLevel));
+        return getPokemonsWithIdSmallOf10(pokemons);
+    }
+
+    private List<Pokemon> getPokemonsWithIdSmallOf10(List<Pokemon> pokemons) {
+
+        var num = pokemons.stream().limit(10).count();
 
         return pokemons.stream().map(pokemon -> {
             int cont = 1;
-            for (int i = 0; i < pokemons.size(); i++, cont++) {
+            for (int i = 0; i < num ; i++, cont++) {
                 var addLinkUrlPokemons = LINK + "00" + cont + ".png";
-                pokemons.get(i).setLinkurl(addLinkUrlPokemons);
+                pokemons.get(((int) num)).setLinkurl(addLinkUrlPokemons);
             }
             return pokemon;
         }).collect(Collectors.toList());

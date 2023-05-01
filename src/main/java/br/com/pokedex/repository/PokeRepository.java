@@ -13,6 +13,6 @@ import java.util.Optional;
 public interface PokeRepository extends JpaRepository<Pokemon, Integer> {
 
 
-    @Query(value = "select * from Pokemon pk order by id", nativeQuery = true)
-    List<Pokemon> findAllPokemonsById();
+//    @Query(value = "select * from Pokemon pk order by id", nativeQuery = true)
+//    List<Pokemon> findAllPokemons();
 }
