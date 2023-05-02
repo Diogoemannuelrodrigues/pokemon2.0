@@ -1,10 +1,9 @@
 package br.com.pokedex.services;
 
 import br.com.pokedex.entity.Pokemon;
+import br.com.pokedex.exceptions.PokemonNotFoundException;
 import br.com.pokedex.repository.PokeRepository;
 import br.com.pokedex.service.PokeService;
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,10 +13,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -90,11 +86,26 @@ public class PokeserviceTest {
     @DisplayName("Save the pokemon by Id - Fail")
     public void getPokemonSaveFail() {
         //when
+        var poke = Pokemon.builder().id(1).build();
+        when(pokeRepository.findById(Mockito.any())).thenReturn(Optional.ofNullable(poke));
 
         //then
-        var result = pokeService.savePokemon(null);
+        var result = pokeService.pokemonById(poke.getId());
         //return
-        assertNull(result);
+        assertNotNull(result);
+
+    }
+
+    @Test(expected = PokemonNotFoundException.class)
+    @DisplayName("Save the pokemon by Id - Fail")
+    public void getPokemonFail() {
+        //when
+        when(pokeRepository.findById(Mockito.any())).thenReturn(Optional.ofNullable(null));
+
+        //then
+        var result = pokeService.pokemonById(1);
+        //return
+        assertNotNull(result);
 
     }
 
